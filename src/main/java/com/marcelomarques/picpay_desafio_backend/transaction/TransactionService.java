@@ -3,6 +3,7 @@ package com.marcelomarques.picpay_desafio_backend.transaction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.marcelomarques.picpay_desafio_backend.authorization.AuthorizerService;
 import com.marcelomarques.picpay_desafio_backend.exception.InvalidTransactionException;
 import com.marcelomarques.picpay_desafio_backend.wallet.Wallet;
 import com.marcelomarques.picpay_desafio_backend.wallet.WalletRepository;
@@ -13,11 +14,13 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final WalletRepository walletRepository;
+    private final AuthorizerService authorizerService;
     private Transaction save;
 
-    public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository) {
+    public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository, AuthorizerService authorizerService) {
         this.transactionRepository = transactionRepository;
         this.walletRepository = walletRepository;
+        this.authorizerService = authorizerService;
     }
     
     @Transactional
@@ -30,6 +33,8 @@ public class TransactionService {
         var wallet = walletRepository.findById(transaction.payer()).get();
 
         walletRepository.save(wallet.debit(transaction.value()));
+
+        authorizerService.authorize(transaction);
 
         return  newTransaction;
     }
