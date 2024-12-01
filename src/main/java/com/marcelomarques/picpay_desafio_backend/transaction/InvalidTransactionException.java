@@ -1,4 +1,4 @@
-package com.marcelomarques.picpay_desafio_backend.exception;
+package com.marcelomarques.picpay_desafio_backend.transaction;
 
 public class InvalidTransactionException extends RuntimeException {
 

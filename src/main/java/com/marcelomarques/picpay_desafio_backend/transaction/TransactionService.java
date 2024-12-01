@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcelomarques.picpay_desafio_backend.authorization.AuthorizerService;
-import com.marcelomarques.picpay_desafio_backend.exception.InvalidTransactionException;
 import com.marcelomarques.picpay_desafio_backend.wallet.Wallet;
 import com.marcelomarques.picpay_desafio_backend.wallet.WalletRepository;
 import com.marcelomarques.picpay_desafio_backend.wallet.WalletType;
@@ -42,8 +41,8 @@ public class TransactionService {
     public void validate(Transaction transaction){
     	walletRepository.findById(transaction.payee())
             .map(payee -> walletRepository.findById(transaction.payer())
-            .map(payer -> isTransactionValid(transaction, payer) ? transaction : null)
-            .orElseThrow(() -> new InvalidTransactionException("Invalid transaction - %s".formatted(transaction))))
+            		.map(payer -> isTransactionValid(transaction, payer) ? transaction : null)
+            		.orElseThrow(() -> new InvalidTransactionException("Invalid transaction - %s".formatted(transaction))))
             .orElseThrow(() -> new InvalidTransactionException("Invalid transaction - %s".formatted(transaction)));
     }
 

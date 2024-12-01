@@ -22,7 +22,7 @@ public class AuthorizerService {
             .toEntity(Authorization.class);
 
             if (response.getStatusCode().isError() || !response.getBody().isAutorization()) {
-            throw new RuntimeException("Unauthorized!");
+            throw new UnauthorizedTransactionException("Unauthorized Transaction!");
         }
     }
 
